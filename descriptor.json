@@ -1,0 +1,88 @@
+{
+    "name": "LandmarkDetect-ML-MSET-Pred",
+    "container-image": {
+        "image": "cytomineuliege/s_landmarkdetect-ml-mset-pred",
+        "type": "singularity"
+    },
+    "schema-version": "cytomine-0.1",
+    "description": "optional description",
+    "command-line": "python run.py CYTOMINE_HOST CYTOMINE_PUBLIC_KEY CYTOMINE_PRIVATE_KEY CYTOMINE_ID_PROJECT CYTOMINE_ID_SOFTWARE CYTOMINE_TRAINING_IMAGES CYTOMINE_ID_TERMS IMAGE_TYPE MODEL_NJOBS MODEL_R MODEL_RMAX MODEL_P MODEL_NPRED MODEL_NTREES MODEL_NTIMES MODEL_ANGLE MODEL_DEPTH MODEL_STEP MODEL_WSIZE MODEL_FEATURE_TYPE MODEL_FEATURE_HAAR_N MODEL_FEATURE_GAUSSIAN_N MODEL_FEATURE_GAUSSIAN_STD MODEL_SAVE_TO MODEL_NAME VERBOSE",
+    "inputs": [
+        {
+        	"id": "cytomine_host",
+      		"value-key": "[@ID]",
+      		"command-line-flag": "--@id",
+      		"name": "Cytomine host",
+      		"set-by-server": true,
+      		"optional": false,
+      		"type": "snoopy"
+    	},
+        {
+			"id": "cytomine_public_key",
+			"value-key": "[@ID]",
+			"command-line-flag": "--@id",
+			"name": "Cytomine public key",
+			"set-by-server": true,
+			"optional": false,
+			"type": "String"
+    	},
+    	{
+    		"id": "cytomine_private_key",
+			"value-key": "[@ID]",
+			"command-line-flag": "--@id",
+			"name": "Cytomine private key",
+			"set-by-server": true,
+			"optional": false,
+			"type": "String"
+    	},
+		{
+			"id": "cytomine_id_project",
+			"value-key": "[@ID]",
+			"command-line-flag": "--@id",
+			"name": "Cytomine project ID",
+			"set-by-server": true,
+			"optional": false,
+			"type": "Number"
+    	},
+		{
+			"id": "cytomine_id_software",
+			"value-key": "[@ID]",
+			"command-line-flag": "--@id",
+			"name": "Cytomine software ID",
+			"set-by-server": true,
+			"optional": false,
+			"type": "Number"
+		},
+        {
+            "id": "images_to_predict",
+            "value-key": "[@ID]",
+            "command-line-flag": "--@id",
+            "name": "Images on which to apply the model",
+            "set-by-server": false,
+            "optional": false,
+            "type": "String"
+        },
+        {
+            "id": "model_to_use",
+            "value-key": "[@ID]",
+            "command-line-flag": "--@id",
+            "name": "CytomineJob ID of the model to use",
+            "set-by-server": false,
+            "optional": false,
+            "type": "Domain",
+            "uri": "/api/job.json?object=$currentProject$",
+            "uri-sort-attribute": "softwareName",
+            "uri-print-attribute": "softwareName"
+        },
+        {
+            "id": "verbose",
+            "value-key": "[@ID]",
+            "command-line-flag": "--@id",
+            "name": "verbose",
+            "set-by-server": false,
+            "optional": false,
+            "default-value": false,
+            "type": "Boolean"
+        }
+    ]
+}
