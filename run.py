@@ -22,20 +22,14 @@ __contributors__ = ["Marée Raphaël <raphael.maree@ulg.ac.be>"]
 __copyright__ = "Copyright 2010-2016 University of Liège, Belgium, http://www.cytomine.be/"
 
 from sklearn.externals import joblib
-from array import *
-from shapely.geometry.polygon import Polygon
 from shapely.geometry import Point
-from ldmtools import build_dataset_image
 import sys, os
 
-sys.path.append('/software_router/algo/landmark_model_builder/')
-sys.path.append('/home/remy/git/Cytomine-python-datamining/cytomine-applications/landmark_model_builder/')
 from ldmtools import *
-import cytomine
 from cytomine import cytomine, models, CytomineJob
 from cytomine.models import *
 from cytomine.models import Annotation, Job, ImageInstanceCollection, AnnotationCollection, Property, AttachedFileCollection, AttachedFile
-
+import numpy as np
 """
 Given the classifier clf, this function will try to find the landmark on the
 image current
@@ -111,15 +105,6 @@ def find_by_attribute(att_fil, attr, val):
 
 def main():
 	with CytomineJob.from_cli(sys.argv) as conn:
-
-		train_job = Job().fetch(conn.parameters.model_to_use)
-		attached_files = AttachedFileCollection(train_job).fetch()
-		for k in attached_files:
-			print(k)
-		sys.exit()
-		#properties = PropertyCollection(train_job).fetch()
-		str_terms = "6579647 6581077 6581992"#properties['id_terms']
-		term_list = [int(x) for x in str_terms.split(' ')]
 		base_path = "{}".format(os.getenv("HOME"))
 		working_path = os.path.join(base_path, str(conn.job.id))
 		in_path = os.path.join(working_path, "in/")
@@ -127,15 +112,6 @@ def main():
 
 		tr_working_path = os.path.join(base_path, str(conn.parameters.model_to_use))
 		tr_out_path = os.path.join(tr_working_path, "out/")
-
-		#term_list = []
-		#image_type = ''
-		#for f in os.listdir(tr_out_path):
-		#	if f.endswith('.joblib') and f.find('model')>=0:
-		#		id_term = int(f.rstrip('_model.joblib'))
-		#		term_list.append(id_term)
-		#		parameters_hash = joblib.load(os.path.join(tr_out_path, '%d_parameters.joblib' % id_term))
-		#		image_type = parameters_hash['image_type']
 
 		if not os.path.exists(working_path):
 			os.makedirs(working_path)
@@ -154,26 +130,32 @@ def main():
 					image.dump(os.path.join(in_path, '%d.jpg' % (image.id)))
 
 		annotation_collection = AnnotationCollection()
+		train_job = Job().fetch(conn.parameters.model_to_use)
+		properties = PropertyCollection(train_job).fetch()
+		str_terms = ""
+		for prop in properties:
+			if prop.fetch(key='id_terms')!=None:
+				str_terms = prop.fetch(key='id_terms').value
+		term_list = [int(x) for x in str_terms.split(' ')]
 		attached_files = AttachedFileCollection(train_job).fetch()
 
 		for id_term in term_list:
-			model_file = find_by_attribute(attached_files, "filename", os.path.join(tr_out_path,"%d_model.joblib"%id_term))
+			model_file = find_by_attribute(attached_files, "filename", "%d_model.joblib"%id_term)
 			model_filepath = os.path.join(in_path, "%d_model.joblib"%id_term)
 			model_file.download(model_filepath, override=True)
-			cov_file = find_by_attribute(attached_files, 'filename', os.path.join(tr_out_path, '%d_cov.joblib'%id_term))
+			cov_file = find_by_attribute(attached_files, 'filename', '%d_cov.joblib'%id_term)
 			cov_filepath = os.path.join(in_path, "%d_cov.joblib"%id_term)
 			cov_file.download(cov_filepath, override=True)
-			parameters_file = find_by_attribute(attached_files, 'filename', os.path.join(tr_out_path, '%d_parameters.joblib'%id_term))
+			parameters_file = find_by_attribute(attached_files, 'filename', '%d_parameters.joblib'%id_term)
 			parameters_filepath = os.path.join(in_path, '%d_parameters.joblib'%id_term)
 			parameters_file.download(parameters_filepath, override=True)
-
 
 			model = joblib.load(model_filepath)
 			[mx, my, cm] = joblib.load(cov_filepath)
 			parameters_hash = joblib.load(parameters_filepath)
 			feature_parameters = None
 			if parameters_hash['feature_type'] in ['haar', 'gaussian']:
-				fparameters_file = find_by_attribute(attached_files, 'filename', os.path.join(tr_out_path, "%d_fparameters.joblib"%id_term))
+				fparameters_file = find_by_attribute(attached_files, 'filename', "%d_fparameters.joblib"%id_term)
 				fparametersl_filepath = os.path.join(in_path, "%d_fparameters.joblib"%id_term)
 				fparameters_file.download(fparametersl_filepath, override=True)
 				feature_parameters = joblib.load(fparametersl_filepath)
