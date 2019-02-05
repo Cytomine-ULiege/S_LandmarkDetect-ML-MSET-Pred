@@ -1,5 +1,5 @@
 {
-    "name": "LandmarkDetect-ML-MSET-Pred",
+    "name": "LandmarkDetect-ML-MSET-Pred-A",
     "container-image": {
         "image": "cytomineuliege/s_landmarkdetect-ml-mset-pred",
         "type": "singularity"
@@ -10,16 +10,16 @@
     "inputs": [
         {
         	"id": "cytomine_host",
-      		"value-key": "[@ID]",
+      		"value-key": "@ID",
       		"command-line-flag": "--@id",
       		"name": "Cytomine host",
       		"set-by-server": true,
       		"optional": false,
-      		"type": "snoopy"
+      		"type": "String"
     	},
         {
 			"id": "cytomine_public_key",
-			"value-key": "[@ID]",
+			"value-key": "@ID",
 			"command-line-flag": "--@id",
 			"name": "Cytomine public key",
 			"set-by-server": true,
@@ -28,7 +28,7 @@
     	},
     	{
     		"id": "cytomine_private_key",
-			"value-key": "[@ID]",
+			"value-key": "@ID",
 			"command-line-flag": "--@id",
 			"name": "Cytomine private key",
 			"set-by-server": true,
@@ -37,7 +37,7 @@
     	},
 		{
 			"id": "cytomine_id_project",
-			"value-key": "[@ID]",
+			"value-key": "@ID",
 			"command-line-flag": "--@id",
 			"name": "Cytomine project ID",
 			"set-by-server": true,
@@ -46,7 +46,7 @@
     	},
 		{
 			"id": "cytomine_id_software",
-			"value-key": "[@ID]",
+			"value-key": "@ID",
 			"command-line-flag": "--@id",
 			"name": "Cytomine software ID",
 			"set-by-server": true,
@@ -55,7 +55,7 @@
 		},
         {
             "id": "images_to_predict",
-            "value-key": "[@ID]",
+            "value-key": "@ID",
             "command-line-flag": "--@id",
             "name": "Images on which to apply the model",
             "set-by-server": false,
@@ -64,19 +64,16 @@
         },
         {
             "id": "model_to_use",
-            "value-key": "[@ID]",
+            "value-key": "@ID",
             "command-line-flag": "--@id",
             "name": "CytomineJob ID of the model to use",
             "set-by-server": false,
             "optional": false,
-            "type": "Domain",
-            "uri": "/api/job.json?object=$currentProject$",
-            "uri-sort-attribute": "softwareName",
-            "uri-print-attribute": "softwareName"
+            "type": "Domain"
         },
         {
             "id": "verbose",
-            "value-key": "[@ID]",
+            "value-key": "@ID",
             "command-line-flag": "--@id",
             "name": "verbose",
             "set-by-server": false,
