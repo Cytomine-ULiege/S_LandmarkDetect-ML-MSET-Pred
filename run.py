@@ -139,7 +139,7 @@ def main():
 		term_list = [int(x) for x in str_terms.split(' ')]
 		attached_files = AttachedFileCollection(train_job).fetch()
 
-		for id_term in term_list:
+		for id_term in conn.monitor(term_list, start=10, end=90, period = 0.05, prefix="Finding landmarks for terms..."):
 			model_file = find_by_attribute(attached_files, "filename", "%d_model.joblib"%id_term)
 			model_filepath = os.path.join(in_path, "%d_model.joblib"%id_term)
 			model_file.download(model_filepath, override=True)
