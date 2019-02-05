@@ -75,11 +75,11 @@
             "id": "verbose",
             "value-key": "@ID",
             "command-line-flag": "--@id",
-            "name": "verbose",
+            "name": "Verbosity",
             "set-by-server": false,
             "optional": false,
-            "default-value": false,
-            "type": "Boolean"
+            "default-value": 0,
+            "type": "Number"
         }
     ]
 }
