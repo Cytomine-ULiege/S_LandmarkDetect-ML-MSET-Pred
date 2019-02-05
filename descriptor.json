@@ -69,7 +69,7 @@
             "name": "CytomineJob ID of the model to use",
             "set-by-server": false,
             "optional": false,
-            "type": "Domain"
+            "type": "Number"
         },
         {
             "id": "verbose",
